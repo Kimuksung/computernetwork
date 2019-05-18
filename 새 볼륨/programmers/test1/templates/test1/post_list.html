@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title> Programmers</title>
+
+    <style>
+      h1{
+        font-size:45px;
+        text-align:center;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1>TodoList</h1>
+      <hr>
+    </div>
+    <ol>
+    {%for post in posts%}
+      <li><p><a href="detail/{{post.id}}"> title : {{post.title}} </a></p></li>
+    {%endfor%}
+    </ol>
+    <div style="position:absolute;right:20px;bottom:20px;">
+      <form action="index.html">
+        <input type="button" onclick="location.href='add'" value="글쓰기">
+      </form>
+    </div>
+  </body>
+</html>

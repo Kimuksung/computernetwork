@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+<table class="table table-bordered">
+    <thead>
+        <caption> 수정 페이지 </caption>
+    </thead>
+    <tbody>
+        <form action="edit" method="post">
+          {% csrf_token %}
+            <tr>
+                <th>제목: </th>
+                <td><input type="text" placeholder="제목을 입력하세요. " name="title" class="form-control"/></td>
+            </tr>
+            <tr>
+                <th>내용: </th>
+                <td><textarea cols="10" placeholder="내용을 입력하세요. " name="text" class="form-control"></textarea></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" value="변경하기" class="pull-right"/>
+                    <input type="button" value="취소하기 " class="pull-right" onclick="javascript:location.href='post_list'"/>
+                </td>
+            </tr>
+        </form>
+    </tbody>
+</table>
+</div>
+</body>
+</html>
