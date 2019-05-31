@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="utf-8">
+<title> game </title>
+
+</head>
+<style type="text/css">
+ html{height:100%;}
+ body {position:relative;margin:0; padding:0; height:100%}
+ #bgbg {position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1; overflow:hidden}
+ </style>
+<body>
+<meta http-equiv="refresh" content="7">
+{% load staticfiles %}
+<div id="bgbg"><img src="{% static "img/backnothing.png" %}" alt="" width="100%" height="100%" ></div>
+
+
+ <table width="40%" align="left" border="1">
+	<tr><td align=center><img src="{% static "gamer1.png" %}">{{player.nickname}}</td></tr>
+	<tr><td align=center><img src="{%if game_set%}{% static match_player.card%}card.jpg{%else%}{% static "questioncard.jpg" %}{%endif%}"></td></tr>
+	<tr><td align=center>보유한 칩 : {{player.chip}}</td></tr>
+ </table>
+ <table width="20%" height="80%" align="left" border="1">
+	<tr><td align=center>배팅한 칩 : {{player.bet}}</td>
+	<td align=center>배팅한 칩 : {{match_player.bet}}</td></tr>
+	<tr><td colspan="2" align=center>누적 배팅 : {{room.stack}}</td>
+	<tr><td colspan="2" align=center>
+ <form method = "post">
+	<input type = "text" name = "bet">
+	<input type = "submit" value = "배팅">
+	<input type=submit name="die" value = "다이">
+ </form>
+
+	{%if player.is_my_turn == True%}당신의 차례입니다.
+	{%else%}상대방의 차례입니다.
+	{%endif%}
+
+ </td></tr>
+ </table>
+ <table width="40%" align="right" border="1">
+	<tr><td align=center><img src="{% static "gamer2.png" %}">{{match_player.nickname}}</td></tr>
+	<tr><td align=center><img src="{% static match_player.card%}card.jpg"></td></tr>
+	<tr><td align=center>보유한 칩 : {{match_player.chip}}</td></tr>
+ </table>
+</body>
+
+</html>

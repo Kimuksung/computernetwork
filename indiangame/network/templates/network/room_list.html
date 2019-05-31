@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title> room_list </title>
+  </head>
+  <body>
+    {% for room in rooms%}
+    		{%if room.is_playing%}
+          <h1>-게임중인방-</h1>
+          <h2>{{room.name}}</h2>
+          {%else%} <a href = "../room/{{room.name}}">
+          <h1>-대기중방-</h1>
+          <h2>{{room.name}}</h2></a>
+        {% endif %}
+        방 player 수 : {{room.current_player_number}}명<br>
+
+        방 접속 아이디:
+        {% for player in room.join_players.all %}
+    			<li>{{player.nickname}}님
+    		{% endfor %}
+    	{% endfor %}
+
+      <form method = "post" action="room">{% csrf_token %}
+ 		<input type="submit" value="방 입장하기"></br>
+ 	      </form>
+  </body>
+</html>
