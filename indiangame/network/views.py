@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from .models import Player,Room
+from .indiangame import *
 # Create your views here.
 
 def addid(request):
@@ -63,7 +64,64 @@ def room(request):
     return render(request, 'network/room.html', {})
 
 def game(request,name):
+    match_player=False
+    waiting=False
     room=Room.objects.get(name=name)
-    if(room.current_player_number==1):
+    session_nickname = request.session.get('nickname',)
+    player = Player.objects.get(nickname = session_nickname)
+    for room_player in room.join_players.all(): #Player match_player 나누기
+        if room_player.nickname != session_nickname: #Player
+            match_player = room_player
+
+    if(room.is_playing==True):
+        lose_player = Endcheck(player, match_player)
+        if lose_player:#패배한 플레이어가 있다면,
+            HttpResponse("패배한 플레이어 존재")
+    elif(player.is_my_turn==True):
+        try:
+            print('test3')
+            is_bet = Betinput(player, match_player, request.POST['bet'])
+            if is_bet == 0:
+                #배팅액이 같을 경우 승패를 판단해 적용시킨다.
+                if player.bet == match_player.bet:
+                    room.stack = Over(player, match_player, room.stack)
+                    Matchstart(player, match_player)
+
+                    #턴을 설정한다.
+                    SetTurn(player, match_player)
+                    match_player.save()
+                elif is_bet == 1:
+                    return HttpResponse(
+                    "<script>alert('상대방이 배팅한 칩보다 많은 칩을 입력해야 합니다.'); history.go(-1);</script>");
+                elif is_bet == 2:
+                    return HttpResponse(
+                    "<script>alert('사용 가능한 칩의 갯수를 초과했습니다.'); history.go(-1);</script>");
+                elif is_bet == 3:
+                    return HttpResponse(
+                    "<script>alert('상대방의 칩의 갯수보다 적게 입력해야 합니다.'); history.go(-1);</script>");
+
+        except:
+            if 'die' in request.POST:
+                print('test3')
+                SetTurn(player, match_player)
+                Lose(player, match_player, room.stack)
+                Matchstart(player, match_player)
+                room.stack = 0
+                match_player.save()
+    else:
+        waiting=True
+
+    if(room.current_player_number==1):#대기방
             return render(request, 'network/waiting.html', {'name':name})
-    return render(request, 'network/game.html', {'name':name})
+
+    if(room.current_player_number==2 and room.is_playing==False):#게임 시작 하기 전 기본 값 세팅
+        print('initialize first')
+        room.is_playing=True
+        Initialize(player)
+        Initialize(match_player)
+        player.save()
+        match_player.save()
+        temp = Player.objects.get(nickname=room.name)
+        temp.is_my_turn=True
+        temp.save()
+        return render(request, 'network/game.html', {'player':player,'room':room,'match_player':match_player})
